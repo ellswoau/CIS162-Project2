@@ -3,6 +3,8 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,7 +73,21 @@ public class ListModel extends AbstractTableModel {
                 break;
 
             case DueWithInWeek:
-                //  Your code goes here
+                //  TODO: include overdue rentals?
+                GregorianCalendar calendarToday = new GregorianCalendar();
+                Date todayDate = new Date();
+                calendarToday.setTime(todayDate);
+
+                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+
+                        .filter(n -> ChronoUnit.DAYS.between( n.getDueBack().toInstant(),
+                                calendarToday.toInstant()) < 7)
+                        .collect(Collectors.toList());
+
+                // Note: This uses Lambda function
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+
+
                 break;
 
             case DueWithinWeekGamesFirst:
