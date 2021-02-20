@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -47,6 +48,9 @@ public class ListModel extends AbstractTableModel {
     }
 
     private void updateScreen() {
+        GregorianCalendar calendarToday = new GregorianCalendar();
+        Date todayDate = new Date();
+        calendarToday.setTime(todayDate);
         switch (display) {
             case CurrentRentalStatus:
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
@@ -74,9 +78,6 @@ public class ListModel extends AbstractTableModel {
 
             case DueWithInWeek:
                 //  TODO: include overdue rentals?
-                GregorianCalendar calendarToday = new GregorianCalendar();
-                Date todayDate = new Date();
-                calendarToday.setTime(todayDate);
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
@@ -92,10 +93,43 @@ public class ListModel extends AbstractTableModel {
 
             case DueWithinWeekGamesFirst:
                 // Your code goes here
+                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+
+                        .filter( n -> daysBetween(n.getDueBack(),
+                                calendarToday) < 7)
+                        //.filter(n -> ChronoUnit.DAYS.between( n.getDueBack().toInstant(),
+                               // calendarToday.toInstant()) < 7)
+                        .collect(Collectors.toList());
+
+                // Note: This uses Lambda function
+                //sort game first
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+
                 break;
 
             case Cap14DaysOverdue:
                 // Your code goes here AND OTHER PLACES TOO
+
+                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+
+                        .filter( n -> daysBetween(n.getDueBack(),
+                                calendarToday) < 14)
+
+                        .collect(Collectors.toList());
+
+                //TODO set this stream to caps and combine with rest previous list
+
+
+                // Note: This uses Lambda function
+
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+
+
+                break;
+
+            case EverythingScn:
+                // create code to display every record in the inventory system.
+
                 break;
 
             default:

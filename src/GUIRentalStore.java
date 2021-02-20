@@ -24,6 +24,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
     private JMenuItem withIn7ItemScn;
     private JMenuItem sort30DaysItemScn;
     private JMenuItem sortGameItemScn;
+    private JMenuItem EverythingScn;
 
     private JPanel panel;
 
@@ -51,6 +52,8 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         withIn7ItemScn = new JMenuItem("Within 7 Days Screen");
         sortGameItemScn = new JMenuItem("Within 7 Days Games First Screen");
         sort30DaysItemScn = new JMenuItem("Cap all Rentals 14 days late Screen");
+        EverythingScn = new JMenuItem("Everything screen");
+
 
         fileMenu.add(openSerItem);
         fileMenu.add(saveSerItem);
@@ -66,6 +69,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         fileMenu.add (sortGameItemScn);
         fileMenu.add(sort30DaysItemScn);
         fileMenu.addSeparator();
+        fileMenu.add(EverythingScn);
 
         actionMenu.add(rentConsoleItem);
         actionMenu.add(rentGameItem);
@@ -124,6 +128,9 @@ public class GUIRentalStore extends JFrame implements ActionListener {
 
         if (sort30DaysItemScn == comp)
             dList.setDisplay(ScreenDisplay.Cap14DaysOverdue);
+
+        if (EverythingScn == comp)
+            dList.setDisplay(ScreenDisplay.EverythingScn);
 
         if (openSerItem == comp || openTextItem == comp) {
             JFileChooser chooser = new JFileChooser();
