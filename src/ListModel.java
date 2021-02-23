@@ -31,6 +31,8 @@ public class ListModel extends AbstractTableModel {
             "Rented On", "Due Date ", "Console", "Name of the Game"};
     private String[] columnNamesReturned = {"Renter\'s Name", "Rented On Date",
             "Due Date", "Actual date returned ", "Est. Cost", " Real Cost"};
+    private String[] columnNamesEverythingScn = {"Renter\'s Name", "Rented On Date",
+            "Due Date", "Actual date returned ", "Est. Cost", " Real Cost", "Console", "Name of the Game"};
 
     private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -104,6 +106,7 @@ public class ListModel extends AbstractTableModel {
                 // Note: This uses Lambda function
                 //sort game first
                 Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+
 
                 break;
 
@@ -183,7 +186,7 @@ public class ListModel extends AbstractTableModel {
             case Cap14DaysOverdue:
                 return columnNamesCurrentRentals[col];
             case EverythingScn:
-                return columnNamesCurrentRentals[col];
+                return columnNamesEverythingScn[col];
             case DueWithinWeekGamesFirst:
                 return columnNamesCurrentRentals[col];
 
@@ -203,7 +206,7 @@ public class ListModel extends AbstractTableModel {
             case Cap14DaysOverdue:
                 return columnNamesCurrentRentals.length;
             case EverythingScn:
-                return columnNamesCurrentRentals.length;
+                return columnNamesEverythingScn.length;
             case DueWithinWeekGamesFirst:
                 return columnNamesCurrentRentals.length;
 
@@ -230,13 +233,71 @@ public class ListModel extends AbstractTableModel {
             case Cap14DaysOverdue:
                 return currentRentScreen(row, col);
             case EverythingScn:
-                return currentRentScreen(row, col);
+                return EverythingScn(row, col);
             case DueWithinWeekGamesFirst:
                 return currentRentScreen(row, col);
 
 
         }
         throw new IllegalArgumentException();
+    }
+
+    private Object EverythingScn(int row, int col) {
+        switch (col) {
+            case 0:
+                return (filteredListRentals.get(row).nameOfRenter);
+            case 1:
+                return (formatter.format(filteredListRentals.get(row).rentedOn.getTime()));
+
+            case 2:
+                if (filteredListRentals.get(row).dueBack == null)
+                    return "-";
+
+                return (formatter.format(filteredListRentals.get(row).dueBack.getTime()));
+
+
+            case 3:
+                if (filteredListRentals.get(row).actualDateReturned == null) {
+                    return "Not Returned";
+                }
+                else {
+                    return (formatter.format(filteredListRentals.get(row).
+                            actualDateReturned.getTime()));
+                }
+
+            case 4:
+                return (filteredListRentals.get(row).getCost(filteredListRentals.
+                        get(row).dueBack));
+
+            case 5:
+                if (filteredListRentals.get(row).actualDateReturned == null) {
+                    return "Not Returned";
+                }
+                else {
+                    return (filteredListRentals.
+                            get(row).getCost(filteredListRentals.get(row).
+                            actualDateReturned));
+                }
+
+            case 6:
+                if (filteredListRentals.get(row) instanceof Console)
+                    return (((Console) filteredListRentals.get(row)).getConsoleType());
+                else {
+                    if (filteredListRentals.get(row) instanceof Game)
+                        if (((Game) filteredListRentals.get(row)).getConsole() != null)
+                            return ((Game) filteredListRentals.get(row)).getConsole();
+                        else
+                            return "";
+                }
+
+            case 7:
+                if (filteredListRentals.get(row) instanceof Game)
+                    return (((Game) filteredListRentals.get(row)).getNameGame());
+                else
+                    return "";
+            default:
+                throw new RuntimeException("Row,col out of range: " + row + " " + col);
+        }
     }
 
     private Object currentRentScreen(int row, int col) {
