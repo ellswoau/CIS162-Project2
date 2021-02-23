@@ -132,6 +132,14 @@ public class ListModel extends AbstractTableModel {
 
             case EverythingScn:
                 // create code to display every record in the inventory system.
+                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                        .collect(Collectors.toList());
+
+                // Note: This uses Lambda function
+
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+
+
 
                 break;
 
@@ -174,6 +182,8 @@ public class ListModel extends AbstractTableModel {
                 return columnNamesCurrentRentals[col];
             case Cap14DaysOverdue:
                 return columnNamesCurrentRentals[col];
+            case EverythingScn:
+                return columnNamesCurrentRentals[col];
             case DueWithinWeekGamesFirst:
                 return columnNamesCurrentRentals[col];
 
@@ -191,6 +201,8 @@ public class ListModel extends AbstractTableModel {
             case DueWithInWeek:
                 return columnNamesCurrentRentals.length;
             case Cap14DaysOverdue:
+                return columnNamesCurrentRentals.length;
+            case EverythingScn:
                 return columnNamesCurrentRentals.length;
             case DueWithinWeekGamesFirst:
                 return columnNamesCurrentRentals.length;
@@ -216,6 +228,8 @@ public class ListModel extends AbstractTableModel {
             case DueWithInWeek:
                 return currentRentScreen(row, col);
             case Cap14DaysOverdue:
+                return currentRentScreen(row, col);
+            case EverythingScn:
                 return currentRentScreen(row, col);
             case DueWithinWeekGamesFirst:
                 return currentRentScreen(row, col);

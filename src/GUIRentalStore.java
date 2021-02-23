@@ -93,6 +93,8 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         withIn7ItemScn.addActionListener(this);
         sortGameItemScn.addActionListener(this);
         sort30DaysItemScn.addActionListener(this);
+        EverythingScn.addActionListener(this);
+
 
         setJMenuBar(menus);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
