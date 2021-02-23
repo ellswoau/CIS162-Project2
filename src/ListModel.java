@@ -114,10 +114,13 @@ public class ListModel extends AbstractTableModel {
 
                         .filter( n -> daysBetween(n.getDueBack(),
                                 calendarToday) < 14)
+                        .map(arg -> {
+                            arg.setNameOfRenter(arg.getNameOfRenter().toUpperCase());
+                            return arg;
+                        })
+
 
                         .collect(Collectors.toList());
-
-                //TODO set this stream to caps and combine with rest previous list
 
 
                 // Note: This uses Lambda function
