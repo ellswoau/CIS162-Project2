@@ -82,12 +82,11 @@ public class ListModel extends AbstractTableModel {
                 break;
 
             case DueWithInWeek:
-                //  TODO: include overdue rentals?
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
-                        .filter(n -> ChronoUnit.DAYS.between( n.getDueBack().toInstant(),
-                                calendarToday.toInstant()) < 7)
+                        .filter( n -> (daysBetween(n.getDueBack(),
+                                n.getRentedOn()) <= 7) && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
                 // Note: This uses Lambda function
@@ -100,25 +99,28 @@ public class ListModel extends AbstractTableModel {
                 // Your code goes here
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
-                        .filter( n -> daysBetween(n.getDueBack(),
-                                calendarToday) < 7)
-                        //.filter(n -> ChronoUnit.DAYS.between( n.getDueBack().toInstant(),
-                               // calendarToday.toInstant()) < 7)
+                        .filter( n -> (daysBetween(n.getDueBack(),
+                                n.getRentedOn()) <= 7) && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
                 // Note: This uses Lambda function
-                //sort game first
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                //TODO: sort game first
+
+                //this method doesn't work because you cant cast (game) if the object is a (Console)
+                Collections.sort(filteredListRentals, (n1, n2) -> ((Game)n1).getNameGame().compareTo(((Game)n2).getNameGame()));
 
 
                 break;
 
             case Cap14DaysOverdue:
-                // Your code goes here AND OTHER PLACES TOO
+
+
+                // TODO: will need some clarity on this screen, switched from daysBetween method to subtracting
+                //the dates in milliseconds in order to get a negative value for late rentals, as title of screen
+                //implies we may need to capitalize late rentals but instructions do not tell us to do that
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-                        .filter( n -> daysBetween(n.getDueBack(),
-                                calendarToday) >= 14 )
+                        .filter( n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 1209600000 ))
                         .map(n -> {
                                 n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
                                 return n;
@@ -126,27 +128,22 @@ public class ListModel extends AbstractTableModel {
                         .collect(Collectors.toList());
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-                        .filter(n -> daysBetween(n.getDueBack(),
-                                calendarToday) >= 7)
+                        .filter(n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 604800000 )
+                                && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
 
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
                     @Override
                     public int compare(Rental n1, Rental n2) {
-                        int compareDueBack = n1.getDueBack().compareTo(n2.getDueBack());
+                        int compareDueBack = n1.getDueBack().getTime().compareTo(n2.getDueBack().getTime());
                         if (compareDueBack != 0) {
                             return compareDueBack;
                         }
 
                         int compareName = n1.nameOfRenter.compareTo(n2.nameOfRenter);
                         return compareName;
-
-
-                    }
-
-                    });
-               // }(n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                    }});
 
 
                 break;
