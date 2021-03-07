@@ -8,6 +8,7 @@ import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class ListModel extends AbstractTableModel {
@@ -20,7 +21,7 @@ public class ListModel extends AbstractTableModel {
     /**
      * holds only the rentals that are to be displayed
      */
-    private ArrayList<Rental> filteredListRentals;
+    private ArrayList<Rental> filteredListRentals, filteredListRentalsUpperCaps;
 
     /**
      * current screen being displayed
@@ -40,6 +41,8 @@ public class ListModel extends AbstractTableModel {
         display = ScreenDisplay.CurrentRentalStatus;
         listOfRentals = new ArrayList<>();
         filteredListRentals = new ArrayList<>();
+        filteredListRentalsUpperCaps = new ArrayList<>();
+
         updateScreen();
         createList();
     }
@@ -114,21 +117,36 @@ public class ListModel extends AbstractTableModel {
                 // Your code goes here AND OTHER PLACES TOO
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-
                         .filter( n -> daysBetween(n.getDueBack(),
-                                calendarToday) < 14)
-                        .map(arg -> {
-                            arg.setNameOfRenter(arg.getNameOfRenter().toUpperCase());
-                            return arg;
+                                calendarToday) >= 14 )
+                        .map(n -> {
+                                n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
+                                return n;
                         })
+                        .collect(Collectors.toList());
 
-
+                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                        .filter(n -> daysBetween(n.getDueBack(),
+                                calendarToday) >= 7)
                         .collect(Collectors.toList());
 
 
-                // Note: This uses Lambda function
+                Collections.sort(filteredListRentals, new Comparator<Rental>() {
+                    @Override
+                    public int compare(Rental n1, Rental n2) {
+                        int compareDueBack = n1.getDueBack().compareTo(n2.getDueBack());
+                        if (compareDueBack != 0) {
+                            return compareDueBack;
+                        }
 
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                        int compareName = n1.nameOfRenter.compareTo(n2.nameOfRenter);
+                        return compareName;
+
+
+                    }
+
+                    });
+               // }(n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
 
                 break;
@@ -254,7 +272,6 @@ public class ListModel extends AbstractTableModel {
                     return "-";
 
                 return (formatter.format(filteredListRentals.get(row).dueBack.getTime()));
-
 
             case 3:
                 if (filteredListRentals.get(row).actualDateReturned == null) {
