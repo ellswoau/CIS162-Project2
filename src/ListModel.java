@@ -68,8 +68,8 @@ public class ListModel extends AbstractTableModel {
 
             case ReturnedItems:
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-                       .filter(n -> n.actualDateReturned != null)
-                       .collect(Collectors.toList());
+                        .filter(n -> n.actualDateReturned != null)
+                        .collect(Collectors.toList());
 
                 // Note: This uses an anonymous class.
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
@@ -85,6 +85,7 @@ public class ListModel extends AbstractTableModel {
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
+                        //TODO: Ask professor is we should be using daysBetween method or subtracting milliseconds
                         .filter( n -> (daysBetween(n.getDueBack(),
                                 n.getRentedOn()) <= 7) && n.actualDateReturned == null)
                         .collect(Collectors.toList());
@@ -108,26 +109,26 @@ public class ListModel extends AbstractTableModel {
 
                 // Sort using an anonymous class comparator which makes rentals that are a Game object listed first
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
-                            @Override
-                            public int compare(Rental o1, Rental o2) {
-                                if (o1 instanceof Game) {
-                                    if (o2 instanceof Game) {
-                                        return 0;
-                                    }
-                                    else {
-                                        return -1;
-                                    }
-                                }
-                                else {
-                                    if (o2 instanceof Game) {
-                                        return 1;
-                                    }
-                                    else {
-                                        return 0;
-                                    }
-                                }
+                    @Override
+                    public int compare(Rental o1, Rental o2) {
+                        if (o1 instanceof Game) {
+                            if (o2 instanceof Game) {
+                                return 0;
                             }
-                        });
+                            else {
+                                return -1;
+                            }
+                        }
+                        else {
+                            if (o2 instanceof Game) {
+                                return 1;
+                            }
+                            else {
+                                return 0;
+                            }
+                        }
+                    }
+                });
                 break;
 
             case Cap14DaysOverdue:
@@ -137,33 +138,47 @@ public class ListModel extends AbstractTableModel {
                 //the dates in milliseconds in order to get a negative value for late rentals, as title of screen
                 //implies we may need to capitalize late rentals but instructions do not tell us to do that
 
+                //first filter stream to only have rentals with greater than 14 day difference between rentedOn date
+                //and dueback date. Then set the name of the renter to uppercase
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter( n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 1209600000 ))
                         .map(n -> {
-                                n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
-                                return n;
+                            n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
+                            return n;
                         })
                         .collect(Collectors.toList());
 
+                //stream again, this time filtering for all elements greater than a 7 day difference
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter(n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 604800000 )
                                 && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
+                //sort by name first
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
+                //sort by whether or not the rental has more than 14 days between due date and rented on date
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
                     @Override
-                    public int compare(Rental n1, Rental n2) {
-                        int compareDueBack = n1.getDueBack().getTime().compareTo(n2.getDueBack().getTime());
-                        if (compareDueBack != 0) {
-                            return compareDueBack;
+                    public int compare(Rental o1, Rental o2) {
+                        if (o1.getDueBack().getTimeInMillis() - o1.getRentedOn().getTimeInMillis() >= 1209600000) {
+                            if (o2.getDueBack().getTimeInMillis() - o2.getRentedOn().getTimeInMillis() >= 1209600000) {
+                                return 0;
+                            }
+                            else {
+                                return -1;
+                            }
                         }
-
-                        int compareName = n1.nameOfRenter.compareTo(n2.nameOfRenter);
-                        return compareName;
-                    }});
-
-
+                        else {
+                            if (o2.getDueBack().getTimeInMillis() - o2.getRentedOn().getTimeInMillis() >= 1209600000) {
+                                return 1;
+                            }
+                            else {
+                                return 0;
+                            }
+                        }
+                    }
+                });
                 break;
 
             case EverythingScn:
@@ -171,12 +186,7 @@ public class ListModel extends AbstractTableModel {
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .collect(Collectors.toList());
 
-                // Note: This uses Lambda function
-
                 Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
-
-
-
                 break;
 
             default:
@@ -184,7 +194,7 @@ public class ListModel extends AbstractTableModel {
         }
         fireTableStructureChanged();
     }
-    
+
     /**
      * Private helper method to count the number of days between two
      * GregorianCalendar dates
@@ -195,19 +205,19 @@ public class ListModel extends AbstractTableModel {
      * @return int for the number of days between startDate and endDate
      */
     private int daysBetween(GregorianCalendar startDate, GregorianCalendar endDate) {
-		// Determine how many days the Game was rented out
-		GregorianCalendar gTemp = new GregorianCalendar();
-		gTemp = (GregorianCalendar) endDate.clone(); //  gTemp = dueBack;  does not work!!
-		int daysBetween = 0;
-		while (gTemp.compareTo(startDate) > 0) {
-			gTemp.add(Calendar.DATE, -1);                // this subtracts one day from gTemp
-			daysBetween++;
-		}
+        // Determine how many days the Game was rented out
+        GregorianCalendar gTemp = new GregorianCalendar();
+        gTemp = (GregorianCalendar) endDate.clone(); //  gTemp = dueBack;  does not work!!
+        int daysBetween = 0;
+        while (gTemp.compareTo(startDate) > 0) {
+            gTemp.add(Calendar.DATE, -1);                // this subtracts one day from gTemp
+            daysBetween++;
+        }
 
-		return daysBetween;
-	}
+        return daysBetween;
+    }
 
-       @Override
+    @Override
     public String getColumnName(int col) {
         switch (display) {
             case CurrentRentalStatus:
