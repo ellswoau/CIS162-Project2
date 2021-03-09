@@ -13,27 +13,23 @@ import java.util.stream.Stream;
 
 public class ListModel extends AbstractTableModel {
 
-    /**
-     * holds all the rentals
-     */
+    /** holds all the rentals */
     private ArrayList<Rental> listOfRentals;
 
-    /**
-     * holds only the rentals that are to be displayed
-     */
+    /** holds only the rentals that are to be displayed */
     private ArrayList<Rental> filteredListRentals, filteredListRentalsUpperCaps;
 
-    /**
-     * current screen being displayed
-     */
+    /** current screen being displayed */
     private ScreenDisplay display = ScreenDisplay.CurrentRentalStatus;
 
+    /** String arrays used to store names of columns */
     private String[] columnNamesCurrentRentals = {"Renter\'s Name", "Est. Cost",
             "Rented On", "Due Date ", "Console", "Name of the Game"};
     private String[] columnNamesReturned = {"Renter\'s Name", "Rented On Date",
             "Due Date", "Actual date returned ", "Est. Cost", " Real Cost"};
     private String[] columnNamesEverythingScn = {"Renter\'s Name", "Rented On Date",
-            "Due Date", "Actual date returned ", "Est. Cost", " Real Cost", "Console", "Name of the Game"};
+            "Due Date", "Actual date returned ", "Est. Cost", " Real Cost",
+            "Console", "Name of the Game"};
 
     private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -41,8 +37,9 @@ public class ListModel extends AbstractTableModel {
         display = ScreenDisplay.CurrentRentalStatus;
         listOfRentals = new ArrayList<>();
         filteredListRentals = new ArrayList<>();
+        //TODO: delete below before turning in
+        //not currently using the below object, delete later if I dont change
         filteredListRentalsUpperCaps = new ArrayList<>();
-
         updateScreen();
         createList();
     }
@@ -52,6 +49,10 @@ public class ListModel extends AbstractTableModel {
         updateScreen();
     }
 
+    /*****************************************************************
+     * Method that updates screen using a switch and different cases
+     * for each different action listener/menu screen selection
+     *****************************************************************/
     private void updateScreen() {
         GregorianCalendar calendarToday = new GregorianCalendar();
         Date todayDate = new Date();
@@ -60,15 +61,26 @@ public class ListModel extends AbstractTableModel {
             case CurrentRentalStatus:
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter(n -> n.actualDateReturned == null)
+                        .map(n -> {
+                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            return n;
+                        })
                         .collect(Collectors.toList());
 
-                // Note: This uses Lambda function
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
                 break;
 
             case ReturnedItems:
+                //screen that shows all items that have been returned
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter(n -> n.actualDateReturned != null)
+                        .map(n -> {
+                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            return n;
+                        })
                         .collect(Collectors.toList());
 
                 // Note: This uses an anonymous class.
@@ -78,36 +90,49 @@ public class ListModel extends AbstractTableModel {
                         return n1.nameOfRenter.compareTo(n2.nameOfRenter);
                     }
                 });
-
                 break;
 
             case DueWithInWeek:
-
+                //this screen shows all items that are not yet returned
+                //and they have less than 7 days between Rented on and
+                //Due back date.
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter( n -> (daysBetween(n.getRentedOn(),
-                                n.getDueBack()) <= 7) && n.actualDateReturned == null)
+                                n.getDueBack()) <= 7) &&
+                                n.actualDateReturned == null)
+                        .map(n -> {
+                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            return n;
+                        })
                         .collect(Collectors.toList());
 
                 // Note: This uses Lambda function
                 Collections.sort(filteredListRentals, (n1, n2)
                         -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
-
-
                 break;
 
             case DueWithinWeekGamesFirst:
-                // Your code goes here
+                // This screen is the same as the one above but it also
+                //sorts with Rental units of type Game at the top
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
                         .filter( n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) <= 7)
                                 && n.actualDateReturned == null)
+                        .map(n -> {
+                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            return n;
+                        })
                         .collect(Collectors.toList());
 
                 //sort by name of renter first
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
-                // Sort using an anonymous class comparator which makes rentals that are a Game object listed first
+                // Sort using an anonymous class comparator which makes
+                // rentals that are a Game object listed first
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
                     @Override
                     public int compare(Rental o1, Rental o2) {
@@ -133,7 +158,8 @@ public class ListModel extends AbstractTableModel {
 
             case Cap14DaysOverdue:
 
-                //first filter stream to only have rentals with greater than 14 day difference between rentedOn date
+                //first filter stream to only have rentals with greater
+                // than 14 day difference between rentedOn date
                 //and dueback date. Then set the name of the renter to uppercase
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter( n -> (daysBetween(n.getRentedOn(),
@@ -144,7 +170,8 @@ public class ListModel extends AbstractTableModel {
                         })
                         .collect(Collectors.toList());
 
-                //stream again, this time filtering for all elements greater than a 7 day difference
+                //stream again, this time filtering for all elements
+                // greater than a 7 day difference
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .filter(n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) >= 7)
@@ -155,7 +182,8 @@ public class ListModel extends AbstractTableModel {
                 Collections.sort(filteredListRentals, (n1, n2)
                         -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
-                //sort by whether or not the rental has more than 14 days between due date and rented on date
+                //sort by whether or not the rental has more than 14 days
+                // between due date and rented on date
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
                     @Override
                     public int compare(Rental o1, Rental o2) {
@@ -183,8 +211,13 @@ public class ListModel extends AbstractTableModel {
                 break;
 
             case EverythingScn:
-                // create code to display every record in the inventory system.
+                //screen shows everything in listOfRentals w/ no filter
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                        .map(n -> {
+                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            return n;
+                        })
                         .collect(Collectors.toList());
 
                 Collections.sort(filteredListRentals, (n1, n2)
@@ -197,15 +230,15 @@ public class ListModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
 
-    /**
-     * Private helper method to count the number of days between two
-     * GregorianCalendar dates
-     * Note that this is the proper way to do this; trying to use other
-     * classes/methods likely won't properly account for leap days
-     * @param startDate - the beginning/starting day
-     * @param endDate - the last/ending day
-     * @return int for the number of days between startDate and endDate
-     */
+    /*****************************************************************
+      Private helper method to count the number of days between two
+      GregorianCalendar dates
+      Note that this is the proper way to do this; trying to use other
+      classes/methods likely won't properly account for leap days
+      @param startDate - the beginning/starting day
+      @param endDate - the last/ending day
+      @return int for the number of days between startDate and endDate
+     *****************************************************************/
     private int daysBetween(GregorianCalendar startDate, GregorianCalendar endDate) {
         // Determine how many days the Game was rented out
         GregorianCalendar gTemp = new GregorianCalendar();
@@ -219,6 +252,13 @@ public class ListModel extends AbstractTableModel {
         return daysBetween;
     }
 
+    /*****************************************************************
+     Method gets the name of each column used for labels at the top of
+     the results table
+     @param col the column number to get name for, starting at 0 from
+     the left
+     @return String the corresponding name of the column
+     *****************************************************************/
     @Override
     public String getColumnName(int col) {
         switch (display) {
@@ -239,6 +279,11 @@ public class ListModel extends AbstractTableModel {
         throw new RuntimeException("Undefined state for Col Names: " + display);
     }
 
+    /*****************************************************************
+     Method gets number of columns for table in screen from the length
+     of the string array
+     @return number of columns to be used for table
+     *****************************************************************/
     @Override
     public int getColumnCount() {
         switch (display) {
@@ -254,16 +299,18 @@ public class ListModel extends AbstractTableModel {
                 return columnNamesEverythingScn.length;
             case DueWithinWeekGamesFirst:
                 return columnNamesCurrentRentals.length;
-
-
-
         }
         throw new IllegalArgumentException();
     }
 
+    /*****************************************************************
+     Method gets number of rows for table based on number of items
+     in array returned by updateScreen streams
+     @return number of rows for table
+     *****************************************************************/
     @Override
     public int getRowCount() {
-        return filteredListRentals.size();     // returns number of items in the arraylist
+        return filteredListRentals.size();
     }
 
     @Override
