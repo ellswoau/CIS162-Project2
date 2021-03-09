@@ -3,6 +3,6 @@ public enum ConsoleTypes
     PlayStation4,
     XBoxOneS,
     PlayStation4Pro,
-    NintendoSwich,
+    NintendoSwitch,
     SegaGenesisMini; // Best retro
 }

@@ -3,12 +3,8 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class ListModel extends AbstractTableModel {
@@ -493,7 +489,91 @@ public class ListModel extends AbstractTableModel {
     }
 
     public void loadFromText(String filename) {
+        if(filename == null)
+            throw new IllegalArgumentException();
         listOfRentals.clear();
+
+        Scanner in = null;
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        try{
+           in = new Scanner(new File(filename));
+           int size = Integer.parseInt(in.nextLine());
+
+           for (int i = 0; i < size; i++) {
+               String className = in.nextLine();
+
+               String name = in.nextLine();
+
+               name = name.substring(name.indexOf("Name is ") + 8);
+
+               String s = in.nextLine();
+               s = s.substring(s.indexOf("Rented on ") + 10);
+               Date rentedDate = df.parse(s);
+               GregorianCalendar rented = new GregorianCalendar();
+               rented.setTime(rentedDate);
+
+               s = in.nextLine();
+               s = s.substring(s.indexOf("DueDate ") + 8);
+               Date dueDate = df.parse(s);
+               GregorianCalendar due = new GregorianCalendar();
+               due.setTime(dueDate);
+
+               s = in.nextLine();
+               GregorianCalendar returned = new GregorianCalendar();
+               if (s.equals("Not returned!"))
+                   returned = null;
+               else {
+                   Date returnDate = df.parse(s);
+                   returned.setTime(returnDate);
+               }
+
+               if (className.equals("Game")) {
+                   String gameName = in.nextLine();
+                   s = in.nextLine();
+                   ConsoleTypes console;
+                   if (s.equals("No Console"))
+                       console = null;
+                   else if (s.equals("PlayStation4"))
+                       console = ConsoleTypes.PlayStation4;
+                   else if (s.equals("XBoxOneS"))
+                       console = ConsoleTypes.XBoxOneS;
+                   else if (s.equals("PlayStation4Pro"))
+                       console = ConsoleTypes.PlayStation4Pro;
+                   else if (s.equals("NintendoSwitch"))
+                       console = ConsoleTypes.NintendoSwitch;
+                   else if (s.equals("SegaGenesisMini"))
+                       console = ConsoleTypes.SegaGenesisMini;
+                   else
+                       throw new IllegalArgumentException();
+                   listOfRentals.add(new Game(name, rented, due, returned, gameName, console));
+               }
+               else if (className.equals("Console")) {
+                   s = in.nextLine();
+                   ConsoleTypes console;
+                   if (s.equals("No Console"))
+                       console = null;
+                   else if (s.equals("PlayStation4"))
+                       console = ConsoleTypes.PlayStation4;
+                   else if (s.equals("XBoxOneS"))
+                       console = ConsoleTypes.XBoxOneS;
+                   else if (s.equals("PlayStation4Pro"))
+                       console = ConsoleTypes.PlayStation4Pro;
+                   else if (s.equals("NintendoSwitch"))
+                       console = ConsoleTypes.NintendoSwitch;
+                   else if (s.equals("SegaGenesisMini"))
+                       console = ConsoleTypes.SegaGenesisMini;
+                   else
+                       throw new IllegalArgumentException();
+                   listOfRentals.add(new Console(name, rented, due, returned, console));
+               }
+               else
+                   throw new IllegalArgumentException();
+           }
+        }
+        catch(FileNotFoundException | ParseException e){
+            throw new IllegalArgumentException();
+        }
+
 
         updateScreen();
     }
@@ -542,8 +622,8 @@ public class ListModel extends AbstractTableModel {
             Game game3 = new Game("Person1", g5, g3, null, "title2", ConsoleTypes.SegaGenesisMini);
             Game game4 = new Game("Person7", g4, g8, null, "title2", null);
             Game game5 = new Game("Person3", g3, g1, g1, "title2", ConsoleTypes.XBoxOneS);
-            Game game6 = new Game("Person6", g4, g7, null, "title1", ConsoleTypes.NintendoSwich);
-            Game game7 = new Game("Person5", g4, g8, null, "title1", ConsoleTypes.NintendoSwich);
+            Game game6 = new Game("Person6", g4, g7, null, "title1", ConsoleTypes.NintendoSwitch);
+            Game game7 = new Game("Person5", g4, g8, null, "title1", ConsoleTypes.NintendoSwitch);
 
             add(game1);
             add(game4);
@@ -572,7 +652,7 @@ public class ListModel extends AbstractTableModel {
                     guest = "Game" + rand.nextInt(5);
                     Game game;
                     if (count % 2 == 0)
-                        game = new Game(guest, g4, g, null, "title2", ConsoleTypes.NintendoSwich);
+                        game = new Game(guest, g4, g, null, "title2", ConsoleTypes.NintendoSwitch);
                     else
                         game = new Game(guest, g4, g, null, "title2", null);
                     add(game);
@@ -604,7 +684,7 @@ public class ListModel extends AbstractTableModel {
             case 2:
                 return ConsoleTypes.PlayStation4Pro;
             case 3:
-                return ConsoleTypes.NintendoSwich;
+                return ConsoleTypes.NintendoSwitch;
             default:
                 return ConsoleTypes.SegaGenesisMini;
         }
