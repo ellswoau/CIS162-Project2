@@ -103,13 +103,31 @@ public class ListModel extends AbstractTableModel {
                                 n.getRentedOn()) <= 7) && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
-                // Note: This uses Lambda function
-                //TODO: sort game first
+                //sort by name of renter first
+                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
-                //this method doesn't work because you cant cast (game) if the object is a (Console)
-                Collections.sort(filteredListRentals, (n1, n2) -> ((Game)n1).getNameGame().compareTo(((Game)n2).getNameGame()));
-
-
+                // Sort using an anonymous class comparator which makes rentals that are a Game object listed first
+                Collections.sort(filteredListRentals, new Comparator<Rental>() {
+                            @Override
+                            public int compare(Rental o1, Rental o2) {
+                                if (o1 instanceof Game) {
+                                    if (o2 instanceof Game) {
+                                        return 0;
+                                    }
+                                    else {
+                                        return -1;
+                                    }
+                                }
+                                else {
+                                    if (o2 instanceof Game) {
+                                        return 1;
+                                    }
+                                    else {
+                                        return 0;
+                                    }
+                                }
+                            }
+                        });
                 break;
 
             case Cap14DaysOverdue:
