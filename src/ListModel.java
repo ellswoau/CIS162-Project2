@@ -84,14 +84,13 @@ public class ListModel extends AbstractTableModel {
             case DueWithInWeek:
 
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-
-                        //TODO: Ask professor is we should be using daysBetween method or subtracting milliseconds
-                        .filter( n -> (daysBetween(n.getDueBack(),
-                                n.getRentedOn()) <= 7) && n.actualDateReturned == null)
+                        .filter( n -> (daysBetween(n.getRentedOn(),
+                                n.getDueBack()) <= 7) && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
                 // Note: This uses Lambda function
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
 
                 break;
@@ -100,8 +99,9 @@ public class ListModel extends AbstractTableModel {
                 // Your code goes here
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
 
-                        .filter( n -> (daysBetween(n.getDueBack(),
-                                n.getRentedOn()) <= 7) && n.actualDateReturned == null)
+                        .filter( n -> (daysBetween(n.getRentedOn(),
+                                n.getDueBack()) <= 7)
+                                && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
                 //sort by name of renter first
@@ -133,15 +133,11 @@ public class ListModel extends AbstractTableModel {
 
             case Cap14DaysOverdue:
 
-
-                // TODO: will need some clarity on this screen, switched from daysBetween method to subtracting
-                //the dates in milliseconds in order to get a negative value for late rentals, as title of screen
-                //implies we may need to capitalize late rentals but instructions do not tell us to do that
-
                 //first filter stream to only have rentals with greater than 14 day difference between rentedOn date
                 //and dueback date. Then set the name of the renter to uppercase
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-                        .filter( n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 1209600000 ))
+                        .filter( n -> (daysBetween(n.getRentedOn(),
+                                n.getDueBack()) >= 14))
                         .map(n -> {
                             n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
                             return n;
@@ -150,19 +146,23 @@ public class ListModel extends AbstractTableModel {
 
                 //stream again, this time filtering for all elements greater than a 7 day difference
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
-                        .filter(n -> (n.getDueBack().getTimeInMillis() - n.getRentedOn().getTimeInMillis() >= 604800000 )
+                        .filter(n -> (daysBetween(n.getRentedOn(),
+                                n.getDueBack()) >= 7)
                                 && n.actualDateReturned == null)
                         .collect(Collectors.toList());
 
                 //sort by name first
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
 
                 //sort by whether or not the rental has more than 14 days between due date and rented on date
                 Collections.sort(filteredListRentals, new Comparator<Rental>() {
                     @Override
                     public int compare(Rental o1, Rental o2) {
-                        if (o1.getDueBack().getTimeInMillis() - o1.getRentedOn().getTimeInMillis() >= 1209600000) {
-                            if (o2.getDueBack().getTimeInMillis() - o2.getRentedOn().getTimeInMillis() >= 1209600000) {
+                        if (daysBetween(o1.getRentedOn(),
+                                o1.getDueBack()) >= 14) {
+                            if (daysBetween(o2.getRentedOn(),
+                                    o2.getDueBack()) >= 14) {
                                 return 0;
                             }
                             else {
@@ -170,7 +170,8 @@ public class ListModel extends AbstractTableModel {
                             }
                         }
                         else {
-                            if (o2.getDueBack().getTimeInMillis() - o2.getRentedOn().getTimeInMillis() >= 1209600000) {
+                            if (daysBetween(o2.getRentedOn(),
+                                    o2.getDueBack()) >= 14) {
                                 return 1;
                             }
                             else {
@@ -186,7 +187,8 @@ public class ListModel extends AbstractTableModel {
                 filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
                         .collect(Collectors.toList());
 
-                Collections.sort(filteredListRentals, (n1, n2) -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
                 break;
 
             default:
