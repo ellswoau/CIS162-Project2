@@ -69,7 +69,7 @@ public class RentGameDialog extends JDialog implements ActionListener {
         textPanel.add(txtDateRentedOn);
         textPanel.add(new JLabel("Due date (est.): "));
         textPanel.add(txtDateDueDate);
-        textPanel.add(new JLabel("Name of the Gamed"));
+        textPanel.add(new JLabel("Name of the Game: "));
         textPanel.add(txtNameOfGame);
         textPanel.add(new JLabel("ConsoleType"));
         textPanel.add(comBoxConsoleType);
