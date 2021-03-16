@@ -118,7 +118,6 @@ public class RentControllerDialog extends JDialog implements ActionListener {
                 controller.setControllerType((ControllerTypes) comBoxControllerType.getSelectedItem());
 
                 controller.setConsole((ConsoleTypes) comBoxConsoleType.getSelectedItem());
-                System.out.println(controller.toString());
         }
 
         dispose();
