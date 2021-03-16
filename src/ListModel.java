@@ -683,6 +683,8 @@ public class ListModel extends AbstractTableModel {
                    ConsoleTypes console;
                    if (s.equals("No Console"))
                        console = null;
+                   else if (s.equals("NoSelection"))
+                       console = null;
                    else if (s.equals("PlayStation4"))
                        console = ConsoleTypes.PlayStation4;
                    else if (s.equals("XBoxOneS"))
@@ -728,6 +730,8 @@ public class ListModel extends AbstractTableModel {
 
                    s = in.nextLine();
                    if (s.equals("No Console"))
+                       console = null;
+                   else if (s.equals("NoSelection"))
                        console = null;
                    else if (s.equals("PlayStation4"))
                        console = ConsoleTypes.PlayStation4;

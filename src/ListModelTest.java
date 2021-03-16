@@ -240,5 +240,27 @@ public class ListModelTest {
         assertEquals("Jack", testList.getValueAt(2,0));
     }
 
+    @Test
+    public void testLoadFromText() {
+        ListModel testList = new ListModel();
+        testList.loadFromText("src/demo");
+
+        testList.setDisplay(ScreenDisplay.EverythingScn);
+
+        //All elements from src/demo text file are sorted alphabetically
+        //ten elements total
+        assertEquals("Adam", testList.getValueAt(0,0));
+        assertEquals("Ashley", testList.getValueAt(1,0));
+        assertEquals("Austin", testList.getValueAt(2,0));
+        assertEquals("Jacob", testList.getValueAt(3,0));
+        assertEquals("Jason", testList.getValueAt(4,0));
+        assertEquals("Kara", testList.getValueAt(5,0));
+        assertEquals("Ryan", testList.getValueAt(6,0));
+        assertEquals("Sally", testList.getValueAt(7,0));
+        assertEquals("Tara", testList.getValueAt(8,0));
+        assertEquals("Todd", testList.getValueAt(9,0));
+
+    }
+
 
 }
