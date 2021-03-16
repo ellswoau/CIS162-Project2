@@ -19,13 +19,20 @@ public class ListModel extends AbstractTableModel {
     private ScreenDisplay display = ScreenDisplay.CurrentRentalStatus;
 
     /** String arrays used to store names of columns */
-    private String[] columnNamesCurrentRentals = {"Renter\'s Name", "Est. Cost",
-            "Rented On", "Due Date ", "Console", "Controller", "Number of Controllers", "Name of the Game"};
-    private String[] columnNamesReturned = {"Renter\'s Name", "Rented On Date",
-            "Due Date", "Actual date returned ", "Est. Cost", " Real Cost"};
-    private String[] columnNamesEverythingScn = {"Renter\'s Name", "Rented On Date",
-            "Due Date", "Actual date returned ", "Est. Cost", " Real Cost",
-            "Console", "Controller", "Number of Controllers", "Name of the Game"};
+    private String[] columnNamesCurrentRentals = {"Renter\'s Name",
+            "Est. Cost",
+            "Rented On", "Due Date ", "Console", "Controller",
+            "Number of Controllers", "Name of the Game"};
+    private String[] columnNamesReturned = {"Renter\'s Name",
+            "Rented On Date",
+            "Due Date", "Actual date returned ", "Est. Cost",
+            " Real Cost"};
+    private String[] columnNamesEverythingScn = {"Renter\'s Name",
+            "Rented On Date",
+            "Due Date", "Actual date returned ", "Est. Cost",
+            " Real Cost",
+            "Console", "Controller", "Number of Controllers",
+            "Name of the Game"};
 
     private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -33,9 +40,7 @@ public class ListModel extends AbstractTableModel {
         display = ScreenDisplay.CurrentRentalStatus;
         listOfRentals = new ArrayList<>();
         filteredListRentals = new ArrayList<>();
-        //TODO: delete below before turning in
-        //not currently using the below object, delete later if I dont change
-        filteredListRentalsUpperCaps = new ArrayList<>();
+
         updateScreen();
         createList();
     }
@@ -63,11 +68,14 @@ public class ListModel extends AbstractTableModel {
         calendarToday.setTime(todayDate);
         switch (display) {
             case CurrentRentalStatus:
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .filter(n -> n.actualDateReturned == null)
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
-                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1)
+                                    .toLowerCase());
                             return n;
                         })
                         .collect(Collectors.toList());
@@ -78,11 +86,14 @@ public class ListModel extends AbstractTableModel {
 
             case ReturnedItems:
                 //screen that shows all items that have been returned
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .filter(n -> n.actualDateReturned != null)
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
-                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1)
+                                    .toLowerCase());
                             return n;
                         })
                         .collect(Collectors.toList());
@@ -96,13 +107,16 @@ public class ListModel extends AbstractTableModel {
                 //this screen shows all items that are not yet returned
                 //and they have less than 7 days between Rented on and
                 //Due back date.
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .filter( n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) <= 7) &&
                                 n.actualDateReturned == null)
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
-                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1)
+                                    .toLowerCase());
                             return n;
                         })
                         .collect(Collectors.toList());
@@ -115,14 +129,17 @@ public class ListModel extends AbstractTableModel {
             case DueWithinWeekGamesFirst:
                 // This screen is the same as the one above but it also
                 //sorts with Rental units of type Game at the top
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
 
                         .filter( n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) <= 7)
                                 && n.actualDateReturned == null)
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
-                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1)
+                                    .toLowerCase());
                             return n;
                         })
                         .collect(Collectors.toList());
@@ -160,19 +177,23 @@ public class ListModel extends AbstractTableModel {
 
                 //first filter stream to only have rentals with greater
                 // than 14 day difference between rentedOn date
-                //and dueback date. Then set the name of the renter to uppercase
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                //and dueBack date. Then set the name of the renter to
+                // uppercase
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .filter( n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) >= 14))
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().toUpperCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .toUpperCase());
                             return n;
                         })
                         .collect(Collectors.toList());
 
                 //stream again, this time filtering for all elements
                 // greater than a 7 day difference
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .filter(n -> (daysBetween(n.getRentedOn(),
                                 n.getDueBack()) >= 7)
                                 && n.actualDateReturned == null)
@@ -212,10 +233,13 @@ public class ListModel extends AbstractTableModel {
 
             case EverythingScn:
                 //screen shows everything in listOfRentals w/ no filter
-                filteredListRentals = (ArrayList<Rental>) listOfRentals.stream()
+                filteredListRentals = (ArrayList<Rental>) listOfRentals
+                        .stream()
                         .map(n -> {
-                            n.setNameOfRenter(n.getNameOfRenter().substring(0, 1).toUpperCase()
-                                    + n.getNameOfRenter().substring(1).toLowerCase());
+                            n.setNameOfRenter(n.getNameOfRenter()
+                                    .substring(0, 1).toUpperCase()
+                                    + n.getNameOfRenter().substring(1)
+                                    .toLowerCase());
                             return n;
                         })
                         .collect(Collectors.toList());
@@ -225,7 +249,8 @@ public class ListModel extends AbstractTableModel {
                 break;
 
             default:
-                throw new RuntimeException("upDate is in undefined state: " + display);
+                throw new RuntimeException("upDate is in undefined state: "
+                        + display);
         }
         fireTableStructureChanged();
     }
@@ -239,13 +264,15 @@ public class ListModel extends AbstractTableModel {
       @param endDate - the last/ending day
       @return int for the number of days between startDate and endDate
      *****************************************************************/
-    private int daysBetween(GregorianCalendar startDate, GregorianCalendar endDate) {
+    private int daysBetween(GregorianCalendar startDate,
+                            GregorianCalendar endDate) {
         // Determine how many days the Game was rented out
         GregorianCalendar gTemp = new GregorianCalendar();
-        gTemp = (GregorianCalendar) endDate.clone(); //  gTemp = dueBack;  does not work!!
+        gTemp = (GregorianCalendar) endDate.clone();
         int daysBetween = 0;
         while (gTemp.compareTo(startDate) > 0) {
-            gTemp.add(Calendar.DATE, -1);                // this subtracts one day from gTemp
+            // this subtracts one day from gTemp
+            gTemp.add(Calendar.DATE, -1);
             daysBetween++;
         }
 
@@ -276,7 +303,8 @@ public class ListModel extends AbstractTableModel {
                 return columnNamesCurrentRentals[col];
 
         }
-        throw new RuntimeException("Undefined state for Col Names: " + display);
+        throw new RuntimeException("Undefined state for Col Names: "
+                + display);
     }
 
     /*****************************************************************
@@ -339,16 +367,19 @@ public class ListModel extends AbstractTableModel {
             case 0:
                 return (filteredListRentals.get(row).nameOfRenter);
             case 1:
-                return (formatter.format(filteredListRentals.get(row).rentedOn.getTime()));
+                return (formatter.format(filteredListRentals.get(row)
+                        .rentedOn.getTime()));
 
             case 2:
                 if (filteredListRentals.get(row).dueBack == null)
                     return "-";
 
-                return (formatter.format(filteredListRentals.get(row).dueBack.getTime()));
+                return (formatter.format(filteredListRentals.get(row)
+                        .dueBack.getTime()));
 
             case 3:
-                if (filteredListRentals.get(row).actualDateReturned == null) {
+                if (filteredListRentals.get(row).actualDateReturned
+                        == null) {
                     return "Not Returned";
                 }
                 else {
@@ -357,52 +388,62 @@ public class ListModel extends AbstractTableModel {
                 }
 
             case 4:
-                return (filteredListRentals.get(row).getCost(filteredListRentals.
-                        get(row).dueBack));
+                return (filteredListRentals.get(row)
+                        .getCost(filteredListRentals.get(row).dueBack));
 
             case 5:
-                if (filteredListRentals.get(row).actualDateReturned == null) {
+                if (filteredListRentals.get(row).actualDateReturned
+                        == null) {
                     return "Not Returned";
                 }
                 else {
                     return (filteredListRentals.
-                            get(row).getCost(filteredListRentals.get(row).
-                            actualDateReturned));
+                            get(row).getCost(filteredListRentals.get(row)
+                            .actualDateReturned));
                 }
 
             case 6:
                 if (filteredListRentals.get(row) instanceof Console)
-                    return (((Console) filteredListRentals.get(row)).getConsoleType());
+                    return (((Console) filteredListRentals.get(row))
+                            .getConsoleType());
                 else {
                     if (filteredListRentals.get(row) instanceof Controller)
-                        if (((Controller) filteredListRentals.get(row)).getConsole() != null)
-                            return ((((Controller) filteredListRentals.get(row)).getConsole()));
+                        if (((Controller) filteredListRentals.get(row))
+                                .getConsole() != null)
+                            return ((((Controller) filteredListRentals
+                                    .get(row)).getConsole()));
                         else
                             return "";
                     if (filteredListRentals.get(row) instanceof Game)
-                        if (((Game) filteredListRentals.get(row)).getConsole() != null)
-                            return ((Game) filteredListRentals.get(row)).getConsole();
+                        if (((Game) filteredListRentals.get(row)).
+                                getConsole() != null)
+                            return ((Game) filteredListRentals.get(row))
+                                    .getConsole();
                         else
                             return "";
                 }
             case 7:
                 if (filteredListRentals.get(row) instanceof Controller)
-                    return (((Controller) filteredListRentals.get(row)).getControllerType());
+                    return (((Controller) filteredListRentals.get(row))
+                            .getControllerType());
                 else
                     return "";
             case 8:
                 if(filteredListRentals.get(row) instanceof Controller)
-                    return (((Controller)filteredListRentals.get(row)).getNumberOfControllers());
+                    return (((Controller)filteredListRentals.get(row))
+                            .getNumberOfControllers());
                 else
                     return "";
 
             case 9:
                 if (filteredListRentals.get(row) instanceof Game)
-                    return (((Game) filteredListRentals.get(row)).getNameGame());
+                    return (((Game) filteredListRentals.get(row))
+                            .getNameGame());
                 else
                     return "";
             default:
-                throw new RuntimeException("Row,col out of range: " + row + " " + col);
+                throw new RuntimeException("Row,col out of range: " +
+                        row + " " + col);
         }
     }
 
@@ -412,51 +453,62 @@ public class ListModel extends AbstractTableModel {
                 return (filteredListRentals.get(row).nameOfRenter);
 
             case 1:
-                return (filteredListRentals.get(row).getCost(filteredListRentals.
-                        get(row).dueBack));
+                return (filteredListRentals.get(row)
+                        .getCost(filteredListRentals.get(row).dueBack));
 
             case 2:
-                return (formatter.format(filteredListRentals.get(row).rentedOn.getTime()));
+                return (formatter.format(filteredListRentals.get(row)
+                        .rentedOn.getTime()));
 
             case 3:
                 if (filteredListRentals.get(row).dueBack == null)
                     return "-";
 
-                return (formatter.format(filteredListRentals.get(row).dueBack.getTime()));
+                return (formatter.format(filteredListRentals.get(row)
+                        .dueBack.getTime()));
 
             case 4:
                 if (filteredListRentals.get(row) instanceof Console)
-                    return (((Console) filteredListRentals.get(row)).getConsoleType());
+                    return (((Console) filteredListRentals.get(row))
+                            .getConsoleType());
                 else {
                     if (filteredListRentals.get(row) instanceof Controller)
-                        if (((Controller) filteredListRentals.get(row)).getConsole() != null)
-                            return ((((Controller) filteredListRentals.get(row)).getConsole()));
+                        if (((Controller) filteredListRentals.get(row))
+                                .getConsole() != null)
+                            return ((((Controller) filteredListRentals
+                                    .get(row)).getConsole()));
                         else
                             return "";
                     if (filteredListRentals.get(row) instanceof Game)
-                        if (((Game) filteredListRentals.get(row)).getConsole() != null)
-                            return ((Game) filteredListRentals.get(row)).getConsole();
+                        if (((Game) filteredListRentals.get(row))
+                                .getConsole() != null)
+                            return ((Game) filteredListRentals.get(row))
+                                    .getConsole();
                         else
                             return "";
                 }
 
             case 5:
                 if (filteredListRentals.get(row) instanceof Controller)
-                    return (((Controller) filteredListRentals.get(row)).getControllerType());
+                    return (((Controller) filteredListRentals.get(row))
+                            .getControllerType());
                 else
                     return "";
             case 6:
                 if(filteredListRentals.get(row) instanceof Controller)
-                    return (((Controller)filteredListRentals.get(row)).getNumberOfControllers());
+                    return (((Controller)filteredListRentals.get(row))
+                            .getNumberOfControllers());
                 else
                     return "";
             case 7:
                 if (filteredListRentals.get(row) instanceof Game)
-                    return (((Game) filteredListRentals.get(row)).getNameGame());
+                    return (((Game) filteredListRentals.get(row))
+                            .getNameGame());
                 else
                     return "";
             default:
-                throw new RuntimeException("Row,col out of range: " + row + " " + col);
+                throw new RuntimeException("Row,col out of range: "
+                        + row + " " + col);
         }
     }
 
@@ -467,18 +519,19 @@ public class ListModel extends AbstractTableModel {
                 return (filteredListRentals.get(row).nameOfRenter);
 
             case 1:
-                return (formatter.format(filteredListRentals.get(row).rentedOn.
-                        getTime()));
+                return (formatter.format(filteredListRentals.get(row).
+                        rentedOn.getTime()));
             case 2:
-                return (formatter.format(filteredListRentals.get(row).dueBack.
-                        getTime()));
+                return (formatter.format(filteredListRentals.get(row)
+                        .dueBack.getTime()));
             case 3:
                 return (formatter.format(filteredListRentals.get(row).
                         actualDateReturned.getTime()));
 
             case 4:
                 return (filteredListRentals.
-                        get(row).getCost(filteredListRentals.get(row).dueBack));
+                        get(row).getCost(filteredListRentals.get(row)
+                        .dueBack));
 
             case 5:
                 return (filteredListRentals.
@@ -487,7 +540,8 @@ public class ListModel extends AbstractTableModel {
                 ));
 
             default:
-                throw new RuntimeException("Row,col out of range: " + row + " " + col);
+                throw new RuntimeException("Row,col out of range: "
+                        + row + " " + col);
         }
     }
 
@@ -545,13 +599,16 @@ public class ListModel extends AbstractTableModel {
                 Rental unit = listOfRentals.get(i);
                 out.println(unit.getClass().getName());
                 out.println("Name is " + unit.getNameOfRenter());
-                out.println("Rented on " + formatter.format(unit.rentedOn.getTime()));
-                out.println("DueDate " + formatter.format(unit.dueBack.getTime()));
+                out.println("Rented on " + formatter.format(unit.rentedOn
+                        .getTime()));
+                out.println("DueDate " + formatter.format(unit.dueBack
+                        .getTime()));
 
                 if (unit.getActualDateReturned() == null)
                     out.println("Not returned!");
                 else
-                    out.println(formatter.format(unit.actualDateReturned.getTime()));
+                    out.println(formatter.format(unit.actualDateReturned
+                            .getTime()));
 
                 if (unit instanceof Game) {
                     out.println(((Game) unit).getNameGame());
@@ -562,7 +619,8 @@ public class ListModel extends AbstractTableModel {
                 }
                 if (unit instanceof Controller){
                     out.println(((Controller) unit).getControllerType());
-                    out.println("Number of controllers " + ((Controller) unit).getNumberOfControllers());
+                    out.println("Number of controllers " +
+                            ((Controller) unit).getNumberOfControllers());
                     if (((Controller)unit).getConsole() != null)
                         out.println(((Controller)unit).getConsole());
                     else
@@ -637,7 +695,8 @@ public class ListModel extends AbstractTableModel {
                        console = ConsoleTypes.SegaGenesisMini;
                    else
                        throw new IllegalArgumentException();
-                   listOfRentals.add(new Game(name, rented, due, returned, gameName, console));
+                   listOfRentals.add(new Game(name, rented, due,
+                           returned, gameName, console));
                }
                else if(className.equals("Controller")){
                    s = in.nextLine();
@@ -663,7 +722,8 @@ public class ListModel extends AbstractTableModel {
                    else
                        throw new IllegalArgumentException();
                    s = in.nextLine();
-                   s = s.substring(s.indexOf("Number of controllers ") + 22);
+                   s = s.substring(s.indexOf("Number of controllers ")
+                           + 22);
                    numberOfControllers = Integer.parseInt(s);
 
                    s = in.nextLine();
@@ -681,8 +741,9 @@ public class ListModel extends AbstractTableModel {
                        console = ConsoleTypes.SegaGenesisMini;
                    else
                        throw new IllegalArgumentException();
-                   listOfRentals.add(new Controller(name, rented, due, returned,
-                           controller, numberOfControllers, console));
+                   listOfRentals.add(new Controller(name, rented, due,
+                           returned, controller, numberOfControllers,
+                           console));
                }
                else if (className.equals("Console")) {
                    s = in.nextLine();
@@ -701,7 +762,8 @@ public class ListModel extends AbstractTableModel {
                        console = ConsoleTypes.SegaGenesisMini;
                    else
                        throw new IllegalArgumentException();
-                   listOfRentals.add(new Console(name, rented, due, returned, console));
+                   listOfRentals.add(new Console(name, rented, due,
+                           returned, console));
                }
                else
                    throw new IllegalArgumentException();
@@ -715,7 +777,7 @@ public class ListModel extends AbstractTableModel {
         updateScreen();
     }
 
-    /**********************************************************************
+    /*******************************************************************
      *
      *  DO NOT MODIFY THIS METHOD!!!!!!
      */
