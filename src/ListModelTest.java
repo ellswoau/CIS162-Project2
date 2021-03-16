@@ -1,16 +1,15 @@
-import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-class ListModelTest {
+public class ListModelTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testUpdateScreenSort7DaysGamesFirst() {
         ListModel testList = new ListModel();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -19,7 +18,6 @@ class ListModelTest {
         GregorianCalendar g3 = new GregorianCalendar();
         GregorianCalendar g4 = new GregorianCalendar();
         GregorianCalendar g5 = new GregorianCalendar();
-
 
         try {
             Date d1 = df.parse("03/15/2021");
@@ -40,16 +38,20 @@ class ListModelTest {
         //within week
         Game game1001 = new Game("Austin", g1, g2, null, "Call Of Duty", ConsoleTypes.PlayStation4);
         Game game1002 = new Game("Kit", g1, g2, null, "Fortnite", ConsoleTypes.XBoxOneS);
-        Console console1001 = new Console("Fabio", g1, g5, null, ConsoleTypes.PlayStation4);
+        Console console1001 = new Console("Zach", g1, g5, null, ConsoleTypes.PlayStation4);
         Console console1002 = new Console("Aazad", g1, g2, null, ConsoleTypes.NintendoSwitch);
-        Controller controller1001 = new Controller("Betsy", g2, g3, null, ControllerTypes.PlayStation4Wired, 3, ConsoleTypes.PlayStation4);
+        Controller controller1001 = new Controller("Fabio", g2, g3, null, ControllerTypes.PlayStation4Wired, 3, ConsoleTypes.PlayStation4);
 
         //not within week
-        Game game1003 = new Game("Jack", g1, g2, null, "Smash Bros Melee", ConsoleTypes.PlayStation4);
+        Game game1003 = new Game("Jack", g1, g4, null, "Smash Bros Melee", ConsoleTypes.PlayStation4);
+
+        //returned
+        Controller controller1002 = new Controller("Betsy", g2, g3, g4, ControllerTypes.PlayStation4Wired, 3, ConsoleTypes.PlayStation4);
 
 
         testList.add(game1001);
         testList.add(game1002);
+        testList.add(game1003);
         testList.add(console1001);
         testList.add(console1002);
         testList.add(controller1001);
@@ -60,7 +62,7 @@ class ListModelTest {
         //"Austin" comes before "Aazad" because games are listed first in screen
         assertEquals("Austin", testList.getValueAt(0,0));
         assertEquals("Aazad", testList.getValueAt(2,0));
-        assertEquals("Betsy", testList.getValueAt(3,0));
+        assertEquals("Fabio", testList.getValueAt(3,0));
 
 
     }
