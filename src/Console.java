@@ -37,18 +37,16 @@ public class Console extends Rental {
             gTemp.add(Calendar.DATE, -1);
 
         while (gTemp.after(rentedOn)) {
-            while (gTemp.after(rentedOn)) {
-                if ((this.consoleType == ConsoleTypes.NintendoSwitch) ||
-                        (this.consoleType == ConsoleTypes.PlayStation4Pro) ||
-                        (this.consoleType == ConsoleTypes.SegaGenesisMini))
-                    cost += 1.5;
+            if ((this.consoleType == ConsoleTypes.NintendoSwitch) ||
+                    (this.consoleType == ConsoleTypes.PlayStation4Pro) ||
+                    (this.consoleType == ConsoleTypes.SegaGenesisMini))
+                cost += 1.5;
 
-                if ((this.consoleType == ConsoleTypes.PlayStation4) ||
-                        (this.consoleType == ConsoleTypes.XBoxOneS))
-                    cost += 1;
-                gTemp.add(Calendar.DATE, -1);
+            if ((this.consoleType == ConsoleTypes.PlayStation4) ||
+                    (this.consoleType == ConsoleTypes.XBoxOneS))
+                cost += 1;
+            gTemp.add(Calendar.DATE, -1);
 
-            }
         }
         return cost;
     }

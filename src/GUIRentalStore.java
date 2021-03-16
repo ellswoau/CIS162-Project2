@@ -16,6 +16,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
     private JMenuItem openTextItem;
     private JMenuItem saveTextItem;
     private JMenuItem rentConsoleItem;
+    private JMenuItem rentControllerItem;
     private JMenuItem rentGameItem;
     private JMenuItem returnItem;
 
@@ -44,6 +45,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         openTextItem = new JMenuItem("Open Text");
         saveTextItem = new JMenuItem("Save Text");
         rentConsoleItem = new JMenuItem("Rent a Console");
+        rentControllerItem = new JMenuItem("Rent Controllers");
         rentGameItem = new JMenuItem("Rent a Game");
         returnItem = new JMenuItem("Return of Game or Console");
 
@@ -72,6 +74,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         fileMenu.add(EverythingScn);
 
         actionMenu.add(rentConsoleItem);
+        actionMenu.add(rentControllerItem);
         actionMenu.add(rentGameItem);
         actionMenu.addSeparator();
         actionMenu.add(returnItem);
@@ -85,6 +88,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
         saveTextItem.addActionListener(this);
         exitItem.addActionListener(this);
         rentConsoleItem.addActionListener(this);
+        rentControllerItem.addActionListener(this);
         rentGameItem.addActionListener(this);
         returnItem.addActionListener(this);
 
@@ -166,6 +170,13 @@ public class GUIRentalStore extends JFrame implements ActionListener {
             RentConsoleDialog dialog = new RentConsoleDialog(this, Console);
             if(dialog.getCloseStatus() == RentConsoleDialog.OK){
                 dList.add(Console);
+            }
+        }
+        if(e.getSource() == rentControllerItem){
+            Controller controller = new Controller();
+            RentControllerDialog dialog = new RentControllerDialog(this, controller);
+            if(dialog.getCloseStatus() == RentControllerDialog.OK){
+                dList.add(controller);
             }
         }
         if(e.getSource() == rentGameItem){

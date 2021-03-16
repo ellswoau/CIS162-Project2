@@ -20,12 +20,12 @@ public class ListModel extends AbstractTableModel {
 
     /** String arrays used to store names of columns */
     private String[] columnNamesCurrentRentals = {"Renter\'s Name", "Est. Cost",
-            "Rented On", "Due Date ", "Console", "Name of the Game"};
+            "Rented On", "Due Date ", "Console", "Controller", "Number of Controllers", "Name of the Game"};
     private String[] columnNamesReturned = {"Renter\'s Name", "Rented On Date",
             "Due Date", "Actual date returned ", "Est. Cost", " Real Cost"};
     private String[] columnNamesEverythingScn = {"Renter\'s Name", "Rented On Date",
             "Due Date", "Actual date returned ", "Est. Cost", " Real Cost",
-            "Console", "Name of the Game"};
+            "Console", "Controller", "Number of Controllers", "Name of the Game"};
 
     private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -366,14 +366,29 @@ public class ListModel extends AbstractTableModel {
                 if (filteredListRentals.get(row) instanceof Console)
                     return (((Console) filteredListRentals.get(row)).getConsoleType());
                 else {
+                    if (filteredListRentals.get(row) instanceof Controller)
+                        if (((Controller) filteredListRentals.get(row)).getConsole() != null)
+                            return ((((Controller) filteredListRentals.get(row)).getConsole()));
+                        else
+                            return "";
                     if (filteredListRentals.get(row) instanceof Game)
                         if (((Game) filteredListRentals.get(row)).getConsole() != null)
                             return ((Game) filteredListRentals.get(row)).getConsole();
                         else
                             return "";
                 }
-
             case 7:
+                if (filteredListRentals.get(row) instanceof Controller)
+                    return (((Controller) filteredListRentals.get(row)).getControllerType());
+                else
+                    return "";
+            case 8:
+                if(filteredListRentals.get(row) instanceof Controller)
+                    return (((Controller)filteredListRentals.get(row)).getNumberOfControllers());
+                else
+                    return "";
+
+            case 9:
                 if (filteredListRentals.get(row) instanceof Game)
                     return (((Game) filteredListRentals.get(row)).getNameGame());
                 else
@@ -405,6 +420,11 @@ public class ListModel extends AbstractTableModel {
                 if (filteredListRentals.get(row) instanceof Console)
                     return (((Console) filteredListRentals.get(row)).getConsoleType());
                 else {
+                    if (filteredListRentals.get(row) instanceof Controller)
+                        if (((Controller) filteredListRentals.get(row)).getConsole() != null)
+                            return ((((Controller) filteredListRentals.get(row)).getConsole()));
+                        else
+                            return "";
                     if (filteredListRentals.get(row) instanceof Game)
                         if (((Game) filteredListRentals.get(row)).getConsole() != null)
                             return ((Game) filteredListRentals.get(row)).getConsole();
@@ -413,6 +433,16 @@ public class ListModel extends AbstractTableModel {
                 }
 
             case 5:
+                if (filteredListRentals.get(row) instanceof Controller)
+                    return (((Controller) filteredListRentals.get(row)).getControllerType());
+                else
+                    return "";
+            case 6:
+                if(filteredListRentals.get(row) instanceof Controller)
+                    return (((Controller)filteredListRentals.get(row)).getNumberOfControllers());
+                else
+                    return "";
+            case 7:
                 if (filteredListRentals.get(row) instanceof Game)
                     return (((Game) filteredListRentals.get(row)).getNameGame());
                 else
