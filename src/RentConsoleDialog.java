@@ -93,6 +93,7 @@ public class RentConsoleDialog extends JDialog implements ActionListener {
             // save the information in the object
             closeStatus = OK;
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            df.setLenient(false);
 
             Date d1 = null;
             Date d2 = null;
@@ -108,7 +109,13 @@ public class RentConsoleDialog extends JDialog implements ActionListener {
                 console.setDueBack(gregTemp);
 
             } catch (ParseException e1) {
-//                  Do some thing good, what that is, I am not sure.
+                  JOptionPane.showMessageDialog(null, "Enter a valid date in mm/dd/yyyy format.");
+                  closeStatus = CANCEL;
+            }
+
+            if(txtRenterName.getText().equals("") || txtRenterName.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Enter name.");
+                closeStatus = CANCEL;
             }
 
             console.setNameOfRenter(txtRenterName.getText());

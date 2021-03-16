@@ -87,6 +87,8 @@ public class ReturnedOnDialog extends JDialog implements ActionListener {
 				unit.setActualDateReturned(gTemp);
 
 			} catch (ParseException e1) {
+				JOptionPane.showMessageDialog(null, "Enter a valid date in mm/dd/yyyy format");
+				closeStatus = CANCEL;
 			}
 
 		}

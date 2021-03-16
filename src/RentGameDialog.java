@@ -101,6 +101,7 @@ public class RentGameDialog extends JDialog implements ActionListener {
             // save the information in the object
             closeStatus = OK;
             SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            df.setLenient(false);
 
             Date d1 = null;
             Date d2 = null;
@@ -123,8 +124,25 @@ public class RentGameDialog extends JDialog implements ActionListener {
                 game.setConsole(type);
 
             } catch (ParseException e1) {
-//                  Do some thing good, what that is, I am not sure.
+                JOptionPane.showMessageDialog(null, "Enter a valid date in mm/dd/yyyy format");
+                closeStatus = CANCEL;
             }
+
+            if(txtRentedName.getText().equals("") || txtRentedName.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Enter guest's name.");
+                closeStatus = CANCEL;
+            }
+            game.setNameOfRenter(txtRentedName.getText());
+
+            if(txtNameOfGame.getText().equals("") || txtNameOfGame.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Enter game's name.");
+                closeStatus = CANCEL;
+            }
+            game.setNameGame(txtNameOfGame.getText());
+
+            ConsoleTypes type = ((ConsoleTypes) comBoxConsoleType.getSelectedItem());
+
+            game.setConsole(type);
         }
 
         // make the dialog disappear
