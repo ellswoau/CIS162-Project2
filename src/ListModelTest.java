@@ -1,64 +1,70 @@
+import org.junit.Test;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 class ListModelTest {
 
     @org.junit.jupiter.api.Test
-    public void testUpdateScreen() {
+    public void testUpdateScreenSort7DaysGamesFirst() {
+        ListModel testList = new ListModel();
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         GregorianCalendar g1 = new GregorianCalendar();
         GregorianCalendar g2 = new GregorianCalendar();
         GregorianCalendar g3 = new GregorianCalendar();
         GregorianCalendar g4 = new GregorianCalendar();
+        GregorianCalendar g5 = new GregorianCalendar();
+
 
         try {
             Date d1 = df.parse("03/15/2021");
             g1.setTime(d1);
+            Date d5 = df.parse("03/16/2021");
+            g5.setTime(d5);
             Date d2 = df.parse("03/17/2021");
             g2.setTime(d2);
             Date d3 = df.parse("03/21/2021");
             g3.setTime(d3);
             Date d4 = df.parse("03/28/2021");
             g4.setTime(d4);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        //within week
         Game game1001 = new Game("Austin", g1, g2, null, "Call Of Duty", ConsoleTypes.PlayStation4);
-        Console console1001 = new Console("Fabio", g1, g2, null, ConsoleTypes.PlayStation4);
+        Game game1002 = new Game("Kit", g1, g2, null, "Fortnite", ConsoleTypes.XBoxOneS);
+        Console console1001 = new Console("Fabio", g1, g5, null, ConsoleTypes.PlayStation4);
+        Console console1002 = new Console("Aazad", g1, g2, null, ConsoleTypes.NintendoSwitch);
+        Controller controller1001 = new Controller("Betsy", g2, g3, null, ControllerTypes.PlayStation4Wired, 3, ConsoleTypes.PlayStation4);
 
-        Game game1002 = new Game("Kit", g1, g2, null, "Fortnite", ConsoleTypes.PlayStation4);
+        //not within week
+        Game game1003 = new Game("Jack", g1, g2, null, "Smash Bros Melee", ConsoleTypes.PlayStation4);
 
-        add(game1001);
-        add(game1002);
-        add(console1001);
 
-        setDisplay(ScreenDisplay.DueWithinWeekGamesFirst);
+        testList.add(game1001);
+        testList.add(game1002);
+        testList.add(console1001);
+        testList.add(console1002);
+        testList.add(controller1001);
 
-        //going to use a loop to make sure the row of game 1001 is greater than the
-        //row of console1001 in this screen
+
+        testList.setDisplay(ScreenDisplay.DueWithinWeekGamesFirst);
+
+        //"Austin" comes before "Aazad" because games are listed first in screen
+        assertEquals("Austin", testList.getValueAt(0,0));
+        assertEquals("Aazad", testList.getValueAt(2,0));
+        assertEquals("Betsy", testList.getValueAt(3,0));
+
+
     }
 
-    @org.junit.jupiter.api.Test
-    void setDisplay(ScreenDisplay screen) {
-    }
 
-    @org.junit.jupiter.api.Test
-    void getValueAt() {
-    }
 
-    @org.junit.jupiter.api.Test
-    void add(Console console) {
-    }
-
-    void add(Game game) {
-    }
-
-    @org.junit.jupiter.api.Test
-    void get() {
-    }
 }
