@@ -48,6 +48,7 @@ public class RentControllerDialog extends JDialog implements ActionListener {
 
         txtRentedOn.setText(dateNow);
         txtDueDate.setText(dateTomorrow);
+        formatter.setLenient(false);
 
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new GridLayout(7, 2));
@@ -102,12 +103,26 @@ public class RentControllerDialog extends JDialog implements ActionListener {
                 gregTemp.setTime(d2);
                 controller.setDueBack(gregTemp);
             } catch (ParseException e1){
-
+                JOptionPane.showMessageDialog(null, "Enter a valid date in mm/dd/yyyy format");
+                closeStatus = CANCEL;
             }
 
-                int temp;
+                int temp = 0;
+            try {
                 temp = Integer.parseInt(txtControllerNumber.getText());
+                if (temp <= 0){
+                    throw new IllegalArgumentException();
+                }
+            }catch (Throwable e1){
+                JOptionPane.showMessageDialog(null, "Use numerical characters.");
+                closeStatus = CANCEL;
+            }
                 controller.setNumberOfControllers(temp);
+
+            if(txtRenterName.getText().equals("") || txtRenterName.getText() == null) {
+                JOptionPane.showMessageDialog(null, "Enter name.");
+                closeStatus = CANCEL;
+            }
 
                 controller.setNameOfRenter(txtRenterName.getText());
 
