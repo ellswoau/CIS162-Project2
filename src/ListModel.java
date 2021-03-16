@@ -45,6 +45,11 @@ public class ListModel extends AbstractTableModel {
         createList();
     }
 
+    /*****************************************************************
+     * Method used to set what is displayed, and update the screen to
+     * reflect that.
+     * @param selected the screen that you want to display
+     *****************************************************************/
     public void setDisplay(ScreenDisplay selected) {
         display = selected;
         updateScreen();
@@ -341,6 +346,15 @@ public class ListModel extends AbstractTableModel {
         return filteredListRentals.size();
     }
 
+    /*****************************************************************
+     Method gets an object located at a specific row and column in
+     the table
+     @param row the row the desired object is located in
+     @param col the column the desired object is located in
+     @throws IllegalArgumentException if display is not any of the
+     accepted ScreenDisplay types
+     @return object in specified row and column
+     *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
         switch (display) {
@@ -362,6 +376,16 @@ public class ListModel extends AbstractTableModel {
         throw new IllegalArgumentException();
     }
 
+    /*****************************************************************
+     Method returns an object in filteredListRentals to populate a
+     specific row and column in the Everything screen table
+     @param row the row the object should occupy with 0 being the top
+     of the table
+     @param col the column the object should occupy with 0 being the
+     leftmost column
+     @throws RuntimeException if column count is not 0-9
+     @return The value that should go in the given table location
+     *****************************************************************/
     private Object EverythingScn(int row, int col) {
         switch (col) {
             case 0:
@@ -447,6 +471,16 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     Method returns an object in filteredListRentals to populate a
+     specific row and column in the Current Rent screen table
+     @param row the row the object should occupy with 0 being the top
+     of the table
+     @param col the column the object should occupy with 0 being the
+     leftmost column
+     @throws RuntimeException if column count is not 0-7
+     @return The value that should go in the given table location
+     *****************************************************************/
     private Object currentRentScreen(int row, int col) {
         switch (col) {
             case 0:
@@ -512,7 +546,16 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
-
+    /*****************************************************************
+     Method returns an object in filteredListRentals to populate a
+     specific row and column in the Rented Out screen table
+     @param row the row the object should occupy with 0 being the top
+     of the table
+     @param col the column the object should occupy with 0 being the
+     leftmost column
+     @throws RuntimeException if column count is not 0-5
+     @return The value that should go in the given table location
+     *****************************************************************/
     private Object rentedOutScreen(int row, int col) {
         switch (col) {
             case 0:
@@ -545,19 +588,38 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     Method adds a new rental object to the current arraylist of
+     rentals listOfRentals then updates the screen.
+     @param a the rental object that should be added to the array list
+     *****************************************************************/
     public void add(Rental a) {
         listOfRentals.add(a);
         updateScreen();
     }
 
+    /*****************************************************************
+     Method returns a rental object located at the indicated index.
+     @param i the index of a desired Rental object
+     @return a Rental object at index of i
+     *****************************************************************/
     public Rental get(int i) {
         return filteredListRentals.get(i);
     }
 
-    public void update(int index, Rental unit) {
+    /*****************************************************************
+     Method used to make the list update when not within the
+     ListModel class
+     *****************************************************************/
+    public void update() {
         updateScreen();
     }
 
+    /*****************************************************************
+     Method saves arrayList listOfRentals to a database
+     @param filename the name of the file being saved
+     @throws RuntimeException when a file is not able to be written
+     *****************************************************************/
     public void saveDatabase(String filename) {
         try {
             FileOutputStream fos = new FileOutputStream(filename);
@@ -570,6 +632,11 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     Method loads an arrayList Rentals from a database
+     @param filename the name of the file being loaded
+     @throws RuntimeException when a file is not able to be read
+     *****************************************************************/
     public void loadDatabase(String filename) {
         listOfRentals.clear();
 
@@ -586,6 +653,13 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     Method saves arrayList listOfRentals to a text file
+     @param filename the name of the file being saved
+     @throws RuntimeException when a filename is an empty string
+     @return a boolean that states whether the method has been
+     completed properly
+     *****************************************************************/
     public boolean saveAsText(String filename) {
         if (filename.equals("")) {
             throw new IllegalArgumentException();
@@ -613,7 +687,10 @@ public class ListModel extends AbstractTableModel {
                 if (unit instanceof Game) {
                     out.println(((Game) unit).getNameGame());
                     if (((Game) unit).getConsole() != null)
-                        out.println(((Game) unit).getConsole());
+                        if(((Game)unit).getConsole() == ConsoleTypes.NoSelection)
+                            out.println("No Console");
+                        else
+                            out.println(((Game)unit).getConsole());
                     else
                         out.println("No Console");
                 }
@@ -622,7 +699,10 @@ public class ListModel extends AbstractTableModel {
                     out.println("Number of controllers " +
                             ((Controller) unit).getNumberOfControllers());
                     if (((Controller)unit).getConsole() != null)
-                        out.println(((Controller)unit).getConsole());
+                        if(((Controller)unit).getConsole() == ConsoleTypes.NoSelection)
+                            out.println("No Console");
+                        else
+                            out.println(((Controller)unit).getConsole());
                     else
                         out.println("No Console");
                 }
@@ -637,7 +717,12 @@ public class ListModel extends AbstractTableModel {
         }
     }
 
-
+    /*****************************************************************
+     Method loads an arrayList Rentals from a text file
+     @param filename the name of the file being loaded
+     @throws IllegalArgumentException when filename is null or
+     unable to be read
+     *****************************************************************/
     public void loadFromText(String filename) {
         if(filename == null)
             throw new IllegalArgumentException();
@@ -772,6 +857,7 @@ public class ListModel extends AbstractTableModel {
                else
                    throw new IllegalArgumentException();
            }
+           in.close();
         }
         catch(FileNotFoundException | ParseException e){
             throw new IllegalArgumentException();

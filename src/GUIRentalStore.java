@@ -200,7 +200,7 @@ public class GUIRentalStore extends JFrame implements ActionListener {
                                 "\n for renting with us. The price is:  " +
                                 unit.getCost(unit.actualDateReturned) +
                                 " dollars");
-                dList.update(index, unit);
+                dList.update();
             }
         }
     }
