@@ -556,6 +556,14 @@ public class ListModel extends AbstractTableModel {
                     else
                         out.println("No Console");
                 }
+                if (unit instanceof Controller){
+                    out.println(((Controller) unit).getControllerType());
+                    out.println("Number of controllers " + ((Controller) unit).getNumberOfControllers());
+                    if (((Controller)unit).getConsole() != null)
+                        out.println(((Controller)unit).getConsole());
+                    else
+                        out.println("No Console");
+                }
 
                 if (unit instanceof Console)
                     out.println(((Console) unit).getConsoleType());
@@ -626,11 +634,56 @@ public class ListModel extends AbstractTableModel {
                        throw new IllegalArgumentException();
                    listOfRentals.add(new Game(name, rented, due, returned, gameName, console));
                }
+               else if(className.equals("Controller")){
+                   s = in.nextLine();
+                   ControllerTypes controller;
+                   int numberOfControllers;
+                   ConsoleTypes console;
+                   if(s.equals("No Controller"))
+                       throw new IllegalArgumentException();
+                  else if (s.equals("PlayStation4"))
+                       controller = ControllerTypes.PlayStation4;
+                   else if(s.equals("PlayStation4Wired"))
+                       controller = ControllerTypes.PlayStation4Wired;
+                   else if (s.equals("XBoxOneS"))
+                       controller = ControllerTypes.XBoxOneS;
+                   else if (s.equals("XBoxOneSWired"))
+                       controller = ControllerTypes.XBoxOneSWired;
+                   else if (s.equals("NintendoSwitchPro"))
+                       controller = ControllerTypes.NintendoSwitchPro;
+                   else if (s.equals("NintendoSwitch"))
+                       controller = ControllerTypes.NintendoSwitch;
+                   else if (s.equals("SegaGenesisMini"))
+                       controller = ControllerTypes.SegaGenesisMini;
+                   else
+                       throw new IllegalArgumentException();
+                   s = in.nextLine();
+                   s = s.substring(s.indexOf("Number of controllers ") + 22);
+                   numberOfControllers = Integer.parseInt(s);
+
+                   s = in.nextLine();
+                   if (s.equals("No Console"))
+                       console = null;
+                   else if (s.equals("PlayStation4"))
+                       console = ConsoleTypes.PlayStation4;
+                   else if (s.equals("XBoxOneS"))
+                       console = ConsoleTypes.XBoxOneS;
+                   else if (s.equals("PlayStation4Pro"))
+                       console = ConsoleTypes.PlayStation4Pro;
+                   else if (s.equals("NintendoSwitch"))
+                       console = ConsoleTypes.NintendoSwitch;
+                   else if (s.equals("SegaGenesisMini"))
+                       console = ConsoleTypes.SegaGenesisMini;
+                   else
+                       throw new IllegalArgumentException();
+                   listOfRentals.add(new Controller(name, rented, due, returned,
+                           controller, numberOfControllers, console));
+               }
                else if (className.equals("Console")) {
                    s = in.nextLine();
                    ConsoleTypes console;
                    if (s.equals("No Console"))
-                       console = null;
+                       throw new IllegalArgumentException();
                    else if (s.equals("PlayStation4"))
                        console = ConsoleTypes.PlayStation4;
                    else if (s.equals("XBoxOneS"))
