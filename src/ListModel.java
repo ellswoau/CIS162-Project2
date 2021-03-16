@@ -79,13 +79,9 @@ public class ListModel extends AbstractTableModel {
                         })
                         .collect(Collectors.toList());
 
-                // Note: This uses an anonymous class.
-                Collections.sort(filteredListRentals, new Comparator<Rental>() {
-                    @Override
-                    public int compare(Rental n1, Rental n2) {
-                        return n1.nameOfRenter.compareTo(n2.nameOfRenter);
-                    }
-                });
+                //sort by name of renter
+                Collections.sort(filteredListRentals, (n1, n2)
+                        -> n1.nameOfRenter.compareTo(n2.nameOfRenter));
                 break;
 
             case DueWithInWeek:
