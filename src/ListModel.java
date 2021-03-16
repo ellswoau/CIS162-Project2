@@ -46,6 +46,14 @@ public class ListModel extends AbstractTableModel {
     }
 
     /*****************************************************************
+     * Method used exclusively for testing purposes, should be removed
+     * in real production environment. Clears entire rental list.
+     *****************************************************************/
+    public void clearAllRentals() {
+        listOfRentals.clear();
+    }
+
+    /*****************************************************************
      * Method that updates screen using a switch and different cases
      * for each different action listener/menu screen selection
      *****************************************************************/
@@ -570,6 +578,7 @@ public class ListModel extends AbstractTableModel {
             return false;
         }
     }
+
 
     public void loadFromText(String filename) {
         if(filename == null)
